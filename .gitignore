@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Visual studio files
+*.db
+*.opendb
+
+# Project temporaries
+.build
+.install
+build/
