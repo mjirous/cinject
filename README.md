@@ -18,6 +18,7 @@ Here is a list of features this framework provides
 * Checks for circular dependencies as they are forbidden
 * Singleton components
 * Manages component lifetime using **shared_ptr**
+* Supports hierarchy of containers, allowing the child ones to hae private instances, hidden from their parents
 
 
 ### Requirements ###
