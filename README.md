@@ -16,7 +16,7 @@ Contains complex example of Cinject usage demonstrating its features.
 
 * test/
 
-Unit tests of Cinject (requires [google test]( https://github.com/google/googletest )
+Unit tests of Cinject (requires [google test]( https://github.com/google/googletest ))
 
 ### Features ###
 
