@@ -3,13 +3,19 @@
 Welcome to Cinject, a cross platform C++ dependency injection framework built upon C++ 11.
 
 ## Overview ##
+
 Cinject is a very simple C++ dependency injection framework built with features from C++ 11 like **variadic templates**, **shared_ptr** and **type traits**. Cinject implementation is header-only in single header file that simplifies integration with any project. Inspired by the [ninject](http://www.ninject.org/) Cinject provides very similar and comprehensive API.
 
-* include/Cinject 
+* include/Cinject
+
 Cinject implementation, to be included in your project.
-* src/ 
+
+* src/
+
 Contains complex example of Cinject usage demonstrating its features.
-* test/ 
+
+* test/
+
 Unit tests of Cinject (requires [google test]( https://github.com/google/googletest )
 
 ### Features ###
