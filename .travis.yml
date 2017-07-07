@@ -15,6 +15,7 @@ install:
       - make install
       
 script:
+      - cd ~
       - ls -la
       - cmake -DCMAKE_BUILD_TYPE=release -DBUILD_TESTS=ON -DGTEST_ROOT=~/lib/gtest/1.8.0
       - make
