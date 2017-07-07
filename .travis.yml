@@ -4,6 +4,8 @@ dist: trusty
 sudo: required
 
 install:
+      - cwd
+      - ls -la
       - mkdir -p ~/source
       - cd ~/source
       - git clone -b release-1.8.0 https://github.com/google/googletest.git
