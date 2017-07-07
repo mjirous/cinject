@@ -1,4 +1,6 @@
 # Cinject #
+[![Build Status](https://travis-ci.org/mjirous/cinject.svg?branch=master)](https://travis-ci.org/mjirous/cinject)
+
 
 Welcome to Cinject, a cross platform C++ dependency injection framework built using c++ 11.
 
