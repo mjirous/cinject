@@ -42,7 +42,7 @@ Cinject does not have any platform specific dependency and thus should work on v
 Start with the following include:
 
 ```
-#include <Cinject/Cinject.h>
+#include <cinject/cinject.h>
 ```
 
 ### Hello world ###
