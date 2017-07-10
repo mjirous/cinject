@@ -40,7 +40,7 @@ namespace SimpleResolve
     TEST(CInjectTest, TestSimpleResolve__Singleton)
     {
         Container c;
-        c.bind<IRunner>().to<Cheetah>().InSingletonScope();
+        c.bind<IRunner>().to<Cheetah>().inSingletonScope();
 
         std::shared_ptr<IRunner> runner = c.get<IRunner>();
         std::shared_ptr<IRunner> runner2 = c.get<IRunner>();
@@ -70,7 +70,7 @@ namespace SimpleResolve
     TEST(CInjectTest, TestSimpleResolve_ToSelf__Singleton)
     {
         Container c;
-        c.bind<Cheetah>().to<Cheetah>().InSingletonScope();
+        c.bind<Cheetah>().to<Cheetah>().inSingletonScope();
 
         std::shared_ptr<Cheetah> runner = c.get<Cheetah>();
         std::shared_ptr<Cheetah> runner2 = c.get<Cheetah>();
@@ -103,7 +103,7 @@ namespace SimpleResolve
         cinject::Container c;
         c.bind<IRunner>()
             .toFunction<Cheetah>([](InjectionContext*) { return std::make_shared<Cheetah>(); })
-            .InSingletonScope();
+            .inSingletonScope();
 
         std::shared_ptr<IRunner> runner = c.get<IRunner>();
         std::shared_ptr<IRunner> runner2 = c.get<IRunner>();
@@ -192,7 +192,7 @@ namespace MultipleInterfaces
     TEST(CInjectTest, TestMultipleInterfaces__Singleton)
     {
         Container c;
-        c.bind<IWalker, IJumper, IRunner>().to<Cheetah>().InSingletonScope();
+        c.bind<IWalker, IJumper, IRunner>().to<Cheetah>().inSingletonScope();
 
         std::shared_ptr<IRunner> runner = c.get<IRunner>();
         std::shared_ptr<IWalker> walker = c.get<IWalker>();
@@ -239,8 +239,8 @@ namespace NestedDependencies
     TEST(CInjectTest, TestNestedDependencies)
     {
         Container c;
-        c.bind<Spider>().ToSelf();
-        c.bind<INest>().to<SpiderNest>().InSingletonScope();
+        c.bind<Spider>().toSelf();
+        c.bind<INest>().to<SpiderNest>().inSingletonScope();
 
         std::shared_ptr<Spider> spider1 = c.get<Spider>();
         std::shared_ptr<Spider> spider2 = c.get<Spider>();
@@ -333,7 +333,7 @@ namespace NestedDependenciesWithVector
         c.bind<ISnake>().to<Mamba>();
         c.bind<ISnake>().to<Viper>();
         c.bind<IMaterial>().to<Paper>();
-        c.bind<IEncyclopedy>().to<SnakeEncyclopedy>().InSingletonScope();
+        c.bind<IEncyclopedy>().to<SnakeEncyclopedy>().inSingletonScope();
 
         std::shared_ptr<IEncyclopedy> encyclopedy = c.get<IEncyclopedy>();
         std::shared_ptr<IMaterial> material = c.get<IMaterial>();
@@ -425,10 +425,10 @@ namespace ResolveCollection
     {
         Container c;
 
-        c.bind<ISnake>().to<GrassSnake>().InSingletonScope();
-        c.bind<ISnake>().to<Python>().InSingletonScope();
-        c.bind<ISnake>().to<Mamba>().InSingletonScope();
-        c.bind<ISnake>().to<Viper>().InSingletonScope();
+        c.bind<ISnake>().to<GrassSnake>().inSingletonScope();
+        c.bind<ISnake>().to<Python>().inSingletonScope();
+        c.bind<ISnake>().to<Mamba>().inSingletonScope();
+        c.bind<ISnake>().to<Viper>().inSingletonScope();
 
         std::shared_ptr<ISnake> snake = c.get<ISnake>();
 
@@ -466,10 +466,10 @@ namespace ResolveCollection
     {
         Container c;
 
-        c.bind<ISnake>().to<GrassSnake>().InSingletonScope();
-        c.bind<ISnake>().to<Python>().InSingletonScope();
-        c.bind<ISnake>().to<Mamba>().InSingletonScope();
-        c.bind<ISnake>().to<Viper>().InSingletonScope();
+        c.bind<ISnake>().to<GrassSnake>().inSingletonScope();
+        c.bind<ISnake>().to<Python>().inSingletonScope();
+        c.bind<ISnake>().to<Mamba>().inSingletonScope();
+        c.bind<ISnake>().to<Viper>().inSingletonScope();
 
         std::vector<std::shared_ptr<ISnake>> allSnakes = c.get<std::vector<std::shared_ptr<ISnake>>>();
 
@@ -515,7 +515,7 @@ namespace BindManyToOne
         Container c;
 
         // intentional order to not match the function implementation order
-        c.bind<IRunner, IJumper, IWalker>().to<Human>().InSingletonScope();
+        c.bind<IRunner, IJumper, IWalker>().to<Human>().inSingletonScope();
 
         std::shared_ptr<IWalker> walker = c.get<IWalker>();
         std::shared_ptr<IRunner> runner = c.get<IRunner>();
@@ -559,9 +559,9 @@ namespace CircularDependency
         Container c;
 
         // intentional order to not match the function implementation order
-        c.bind<Start>().ToSelf();
-        c.bind<Middle>().ToSelf();
-        c.bind<End>().ToSelf();
+        c.bind<Start>().toSelf();
+        c.bind<Middle>().toSelf();
+        c.bind<End>().toSelf();
 
         ASSERT_THROW(c.get<Start>(), CircularDependencyFound);
     }
@@ -572,8 +572,8 @@ namespace CircularDependency
 
         // intentional order to not match the function implementation order
         c.bind<Start>().toFunction<Start>([](InjectionContext* c) { return std::make_shared<Start>(c->getContainer().get<Middle>(c)); });
-        c.bind<Middle>().ToSelf();
-        c.bind<End>().ToSelf();
+        c.bind<Middle>().toSelf();
+        c.bind<End>().toSelf();
 
         ASSERT_THROW(c.get<Start>(), CircularDependencyFound);
     }
@@ -691,10 +691,10 @@ namespace ContainerHierarchy
     {
         Container c;
 
-        c.bind<City>().ToSelf().InSingletonScope();
+        c.bind<City>().toSelf().inSingletonScope();
 
         Container child(&c);
-        child.bind<Building>().ToSelf().InSingletonScope();
+        child.bind<Building>().toSelf().inSingletonScope();
 
 
         std::shared_ptr<Building> building = child.get<Building>();
@@ -743,12 +743,12 @@ namespace ContainerHierarchyWithCollection
     {
         Container c;
 
-        c.bind<IAnimal>().to<Fish>().InSingletonScope();
-        c.bind<IAnimal>().to<Bird>().InSingletonScope();
+        c.bind<IAnimal>().to<Fish>().inSingletonScope();
+        c.bind<IAnimal>().to<Bird>().inSingletonScope();
 
         Container child(&c);
-        child.bind<IAnimal>().to<Snake>().InSingletonScope();
-        child.bind<IAnimal>().to<Cheetah>().InSingletonScope();
+        child.bind<IAnimal>().to<Snake>().inSingletonScope();
+        child.bind<IAnimal>().to<Cheetah>().inSingletonScope();
 
 
         std::vector<std::shared_ptr<IAnimal>> animalsFromRoot = c.get<std::vector<IAnimal>>();
