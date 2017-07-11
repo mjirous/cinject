@@ -497,7 +497,7 @@ public:
 
     }
 
-    void InSingletonScope()
+    void inSingletonScope()
     {
         storage_->setSingleton(true);
     }
@@ -620,7 +620,7 @@ public:
     {}
 };
 
-// Specialization for single component registration that allows the ToSelf
+// Specialization for single component registration that allows the toSelf
 template<typename TImplementation>
 class ComponentBuilder<TImplementation> : public ComponentBuilderBase<TImplementation>
 {
@@ -629,7 +629,7 @@ public:
         ComponentBuilderBase<TImplementation>(container)
     {}
 
-    StorageConfiguration<InstanceStorage<TImplementation, ConstructorFactory<TImplementation>>> ToSelf()
+    StorageConfiguration<InstanceStorage<TImplementation, ConstructorFactory<TImplementation>>> toSelf()
     {
         return ComponentBuilderBase<TImplementation>::template to<TImplementation>();
     }

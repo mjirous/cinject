@@ -223,15 +223,15 @@ int main()
     Container c;
 
     // Singletons
-    c.bind<IWalker, IRunner, IJumper, ICrawler, ISwimmer, IWaterConsumer, Human>().to<Human>().InSingletonScope();
-    c.bind<ICrawler, IWaterConsumer, Snake>().to<Snake>().InSingletonScope();
-    c.bind<IWalker, ICrawler, ISwimmer, IWaterConsumer, Turtle>().to<Turtle>().InSingletonScope();
-    c.bind<IWalker, IRunner, IJumper, IFlyer, IWaterConsumer, Bird>().to<Bird>().InSingletonScope();
+    c.bind<IWalker, IRunner, IJumper, ICrawler, ISwimmer, IWaterConsumer, Human>().to<Human>().inSingletonScope();
+    c.bind<ICrawler, IWaterConsumer, Snake>().to<Snake>().inSingletonScope();
+    c.bind<IWalker, ICrawler, ISwimmer, IWaterConsumer, Turtle>().to<Turtle>().inSingletonScope();
+    c.bind<IWalker, IRunner, IJumper, IFlyer, IWaterConsumer, Bird>().to<Bird>().inSingletonScope();
 
     // Not singletons
-    c.bind<Legs>().ToSelf();
-    c.bind<Arms>().ToSelf();
-    c.bind<Wings>().to<Wings>(); //Same as ToSelf
+    c.bind<Legs>().toSelf();
+    c.bind<Arms>().toSelf();
+    c.bind<Wings>().to<Wings>(); //Same as toSelf
 
     // Manual creation of object. Not singleton, but it could be by calling InSingleTonScope
     c.bind<Behavior>().toFunction<Behavior>([](InjectionContext* ctx)

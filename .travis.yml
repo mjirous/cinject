@@ -1,0 +1,24 @@
+language: cpp
+
+dist: trusty
+sudo: required
+
+install:
+      - pwd
+      - ls -la
+      - mkdir -p ~/source
+      - cd ~/source
+      - git clone -b release-1.8.0 https://github.com/google/googletest.git
+      - ls -la
+      - mkdir -p ~/source/googletest/build
+      - cd ~/source/googletest/build
+      - cmake -DCMAKE_BUILD_TYPE=release -DBUILD_GTEST=ON -DBUILD_GMOCK=ON -DCMAKE_INSTALL_PREFIX=~/lib/gtest/1.8.0 ..
+      - make
+      - make install
+      
+script:
+      - cd /home/travis/build/mjirous/cinject
+      - ls -la
+      - cmake -DCMAKE_BUILD_TYPE=release -DBUILD_TESTS=ON -DGTEST_ROOT=~/lib/gtest/1.8.0
+      - make
+      - make test

@@ -1,4 +1,6 @@
 # Cinject #
+[![Build Status](https://travis-ci.org/mjirous/cinject.svg?branch=master)](https://travis-ci.org/mjirous/cinject)
+
 
 Welcome to Cinject, a cross platform C++ dependency injection framework built upon C++ 11.
 
@@ -6,17 +8,11 @@ Welcome to Cinject, a cross platform C++ dependency injection framework built up
 
 Cinject is a very simple C++ dependency injection framework built with features from C++ 11 like **variadic templates**, **shared_ptr** and **type traits**. Cinject implementation is header-only in single header file that simplifies integration with any project. Inspired by the [ninject](http://www.ninject.org/) Cinject provides very similar and comprehensive API.
 
-* include/Cinject
+### Project structure ###
 
-Cinject implementation, to be included in your project.
-
-* src/
-
-Contains complex example of Cinject usage demonstrating its features.
-
-* test/
-
-Unit tests of Cinject (requires [google test]( https://github.com/google/googletest ))
+* include/cinject - Cinject implementation, to be included in your project.
+* src/ - Contains complex example of Cinject usage demonstrating its features.
+* test/ - Unit tests of Cinject (requires [google test]( https://github.com/google/googletest ))
 
 ### Features ###
 
