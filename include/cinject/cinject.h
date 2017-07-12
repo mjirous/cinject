@@ -1,5 +1,4 @@
 #pragma once
-#ifndef Q_MOC_RUN //guard to prevent Qt moc processing of this file
 
 #include <typeinfo>
 #include <vector>
@@ -744,4 +743,3 @@ inline void Container::findInstanceRetrievers(std::vector<std::shared_ptr<IInsta
 
 
 }
-#endif
