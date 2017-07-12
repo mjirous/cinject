@@ -327,26 +327,41 @@ public:
 
     // container.get<std::vector<IFoo>>()
     template<typename TVectorWithInterface>
-    typename std::enable_if<is_vector<TVectorWithInterface>::value && !is_shared_ptr<typename trim_vector<TVectorWithInterface>::type>::value,
+    typename std::enable_if<is_vector<TVectorWithInterface>::value &&
+        !is_shared_ptr<typename trim_vector<TVectorWithInterface>::type>::value &&
+        !std::is_reference<TVectorWithInterface>::value,
         std::vector<std::shared_ptr<typename trim_vector<TVectorWithInterface>::type>>>::type
     get(InjectionContext* context = nullptr);
 
     // container.get<std::vector<std::shared_ptr<IFoo>>>()
     template<typename TVectorWithInterface>
-    typename std::enable_if<is_vector<TVectorWithInterface>::value && is_shared_ptr<typename trim_vector<TVectorWithInterface>::type>::value,
+    typename std::enable_if<is_vector<TVectorWithInterface>::value &&
+        is_shared_ptr<typename trim_vector<TVectorWithInterface>::type>::value &&
+        !std::is_reference<TVectorWithInterface>::value,
         std::vector<typename trim_vector<TVectorWithInterface>::type>>::type
         get(InjectionContext* context = nullptr);
 
     // container.get<std::shared_ptr<IFoo>>()
     template<typename TInterfaceWithSharedPtr>
-    typename std::enable_if<!is_vector<TInterfaceWithSharedPtr>::value && is_shared_ptr<TInterfaceWithSharedPtr>::value, TInterfaceWithSharedPtr>::type
+    typename std::enable_if<!is_vector<TInterfaceWithSharedPtr>::value &&
+        is_shared_ptr<TInterfaceWithSharedPtr>::value &&
+        !std::is_reference<TInterfaceWithSharedPtr>::value,
+    TInterfaceWithSharedPtr>::type
     get(InjectionContext* context = nullptr);
 
     // container.get<IFoo>()
     template<typename TInterface>
-    typename std::enable_if<!is_vector<TInterface>::value && !is_shared_ptr<TInterface>::value, std::shared_ptr<TInterface>>::type
+    typename std::enable_if<!is_vector<TInterface>::value &&
+        !is_shared_ptr<TInterface>::value &&
+        !std::is_reference<TInterface>::value,
+    std::shared_ptr<TInterface>>::type
     get(InjectionContext* context = nullptr);
 
+    // container.get<IAny&>()
+    template<typename TInterface>
+    typename std::enable_if<std::is_reference<TInterface>::value,
+    typename std::remove_const<typename std::remove_reference<TInterface>::type>::type>::type
+    get(InjectionContext* context = nullptr);
 
 private:
     void findInstanceRetrievers(std::vector<std::shared_ptr<IInstanceRetriever>>& instanceRetrievers, const component_type& type) const;
@@ -649,7 +664,9 @@ ComponentBuilder<TArgs...> Container::bind()
 
 // container.get<std::vector<IFoo>>()
 template<typename TVectorWithInterface>
-typename std::enable_if<is_vector<TVectorWithInterface>::value && !is_shared_ptr<typename trim_vector<TVectorWithInterface>::type>::value,
+typename std::enable_if<is_vector<TVectorWithInterface>::value &&
+    !is_shared_ptr<typename trim_vector<TVectorWithInterface>::type>::value &&
+    !std::is_reference<TVectorWithInterface>::value,
 std::vector<std::shared_ptr<typename trim_vector<TVectorWithInterface>::type>>>::type Container::get(InjectionContext* context)
 {
     typedef typename trim_vector<TVectorWithInterface>::type InterfaceType;
@@ -680,7 +697,9 @@ std::vector<std::shared_ptr<typename trim_vector<TVectorWithInterface>::type>>>:
 
 // container.get<std::vector<std::shared_ptr<IFoo>>>()
 template<typename TVectorWithInterfaceWithSharedPtr>
-typename std::enable_if<is_vector<TVectorWithInterfaceWithSharedPtr>::value && is_shared_ptr<typename trim_vector<TVectorWithInterfaceWithSharedPtr>::type>::value,
+typename std::enable_if<is_vector<TVectorWithInterfaceWithSharedPtr>::value &&
+    is_shared_ptr<typename trim_vector<TVectorWithInterfaceWithSharedPtr>::type>::value &&
+    !std::is_reference<TVectorWithInterfaceWithSharedPtr>::value,
 std::vector<typename trim_vector<TVectorWithInterfaceWithSharedPtr>::type>>::type Container::get(InjectionContext* context)
 {
     return get<std::vector<typename trim_shared_ptr<typename trim_vector<TVectorWithInterfaceWithSharedPtr>::type>::type>>(context);
@@ -689,16 +708,19 @@ std::vector<typename trim_vector<TVectorWithInterfaceWithSharedPtr>::type>>::typ
 
 // container.get<std::shared_ptr<IFoo>>()
 template<typename TInterfaceWithSharedPtr>
-typename std::enable_if<!is_vector<TInterfaceWithSharedPtr>::value && is_shared_ptr<TInterfaceWithSharedPtr>::value,
+typename std::enable_if<!is_vector<TInterfaceWithSharedPtr>::value &&
+    is_shared_ptr<TInterfaceWithSharedPtr>::value &&
+    !std::is_reference<TInterfaceWithSharedPtr>::value,
 TInterfaceWithSharedPtr>::type Container::get(InjectionContext* context)
 {
     return get<typename trim_shared_ptr<TInterfaceWithSharedPtr>::type>(context);
 }
 
-
 // container.get<IFoo>()
 template<typename TInterface>
-typename std::enable_if<!is_vector<TInterface>::value && !is_shared_ptr<TInterface>::value,
+typename std::enable_if<!is_vector<TInterface>::value &&
+    !is_shared_ptr<TInterface>::value &&
+    !std::is_reference<TInterface>::value,
 std::shared_ptr<TInterface>>::type Container::get(InjectionContext* context)
 {
     std::unique_ptr<InjectionContext> contextPtr;
@@ -722,6 +744,14 @@ std::shared_ptr<TInterface>>::type Container::get(InjectionContext* context)
     std::shared_ptr<InstanceRetriever<TInterface>> retriever = std::dynamic_pointer_cast<InstanceRetriever<TInterface>>(retrievers[0]);
 
     return retriever->forwardInstance(context);
+}
+
+// container.get<IAny&>()
+template<typename TInterface>
+typename std::enable_if<std::is_reference<TInterface>::value,
+typename std::remove_const<typename std::remove_reference<TInterface>::type>::type>::type Container::get(InjectionContext* context)
+{
+    return get<typename std::remove_const<typename std::remove_reference<TInterface>::type>::type>(context);
 }
 
 

@@ -760,3 +760,69 @@ namespace ContainerHierarchyWithCollection
 
     }
 }
+
+namespace ConstReferenceContainerInConstructor
+{
+    class IAnimal
+    {
+    public:
+        virtual ~IAnimal() {}
+    };
+
+    class Bear : public IAnimal
+    {
+    public:
+        INJECT(Bear()) {}
+    };
+
+    class Snake : public IAnimal
+    {
+    public:
+        INJECT(Snake()) {}
+    };
+
+    class Zoo
+    {
+    public:
+        INJECT(Zoo(std::vector<std::shared_ptr<IAnimal>>& animals))
+            : animals(animals) {}
+
+        std::vector<std::shared_ptr<IAnimal>> animals;
+    };
+
+    TEST(CInjectTest, TestReferenceContainerInConstructor)
+    {
+        Container c;
+        c.bind<IAnimal>().to<Bear>();
+        c.bind<IAnimal>().to<Snake>();
+        c.bind<Zoo>().toSelf();
+
+        std::shared_ptr<Zoo> zoo = c.get<Zoo>();
+
+        ASSERT_EQ(2, zoo->animals.size());
+        ASSERT_NE(nullptr, dynamic_cast<Bear*>(zoo->animals[0].get()));
+    }
+
+
+    class ConstZoo
+    {
+    public:
+        INJECT(ConstZoo(const std::vector<std::shared_ptr<IAnimal>>& animals))
+            : animals(animals) {}
+
+        std::vector<std::shared_ptr<IAnimal>> animals;
+    };
+
+    TEST(CInjectTest, TestConstReferenceContainerInConstructor)
+    {
+        Container c;
+        c.bind<IAnimal>().to<Bear>();
+        c.bind<IAnimal>().to<Snake>();
+        c.bind<ConstZoo>().toSelf();
+
+        std::shared_ptr<ConstZoo> zoo = c.get<ConstZoo>();
+
+        ASSERT_EQ(2, zoo->animals.size());
+        ASSERT_NE(nullptr, dynamic_cast<Bear*>(zoo->animals[0].get()));
+    }
+}
