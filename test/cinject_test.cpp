@@ -781,7 +781,7 @@ namespace ConstReferenceContainerInConstructor
         INJECT(Snake()) {}
     };
 
-    class Zoo
+    /*class Zoo
     {
     public:
         INJECT(Zoo(std::vector<std::shared_ptr<IAnimal>>& animals))
@@ -801,10 +801,10 @@ namespace ConstReferenceContainerInConstructor
 
         ASSERT_EQ(2, zoo->animals.size());
         ASSERT_NE(nullptr, dynamic_cast<Bear*>(zoo->animals[0].get()));
-    }
+    }*/
 
 
-    /*class ConstZoo
+    class ConstZoo
     {
     public:
         INJECT(ConstZoo(const std::vector<std::shared_ptr<IAnimal>>& animals))
@@ -824,5 +824,5 @@ namespace ConstReferenceContainerInConstructor
 
         ASSERT_EQ(2, zoo->animals.size());
         ASSERT_NE(nullptr, dynamic_cast<Bear*>(zoo->animals[0].get()));
-    }*/
+    }
 }
