@@ -357,12 +357,6 @@ public:
     std::shared_ptr<TInterface>>::type
     get(InjectionContext* context = nullptr);
 
-    // container.get<IAny&>()
-    template<typename TInterface>
-    typename std::enable_if<std::is_reference<TInterface>::value && !std::is_const<typename std::remove_reference<TInterface>::type>::value,
-    typename std::remove_reference<TInterface>::type>::type
-    get(InjectionContext* context = nullptr);
-
     // container.get<const IAny&>()
     template<typename TInterface>
     typename std::enable_if<std::is_reference<TInterface>::value && std::is_const<typename std::remove_reference<TInterface>::type>::value,
@@ -751,14 +745,6 @@ std::shared_ptr<TInterface>>::type Container::get(InjectionContext* context)
     std::shared_ptr<InstanceRetriever<TInterface>> retriever = std::dynamic_pointer_cast<InstanceRetriever<TInterface>>(retrievers[0]);
 
     return retriever->forwardInstance(context);
-}
-
-// container.get<IAny&>()
-template<typename TInterface>
-typename std::enable_if<std::is_reference<TInterface>::value && !std::is_const<typename std::remove_reference<TInterface>::type>::value,
-typename std::remove_reference<TInterface>::type>::type Container::get(InjectionContext* context)
-{
-    return get<typename std::remove_reference<TInterface>::type>(context);
 }
 
 // container.get<const IAny&>()
