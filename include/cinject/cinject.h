@@ -359,9 +359,16 @@ public:
 
     // container.get<IAny&>()
     template<typename TInterface>
-    typename std::enable_if<std::is_reference<TInterface>::value,
-    typename std::remove_const<typename std::remove_reference<TInterface>::type>::type>::type
+    typename std::enable_if<std::is_reference<TInterface>::value && !std::is_const<typename std::remove_reference<TInterface>::type>::value,
+    typename std::remove_reference<TInterface>::type>::type
     get(InjectionContext* context = nullptr);
+
+    // container.get<const IAny&>()
+    template<typename TInterface>
+    typename std::enable_if<std::is_reference<TInterface>::value && std::is_const<typename std::remove_reference<TInterface>::type>::value,
+    typename std::remove_reference<TInterface>::type>::type
+    get(InjectionContext* context = nullptr);
+
 
 private:
     void findInstanceRetrievers(std::vector<std::shared_ptr<IInstanceRetriever>>& instanceRetrievers, const component_type& type) const;
@@ -748,12 +755,19 @@ std::shared_ptr<TInterface>>::type Container::get(InjectionContext* context)
 
 // container.get<IAny&>()
 template<typename TInterface>
-typename std::enable_if<std::is_reference<TInterface>::value,
-typename std::remove_const<typename std::remove_reference<TInterface>::type>::type>::type Container::get(InjectionContext* context)
+typename std::enable_if<std::is_reference<TInterface>::value && !std::is_const<typename std::remove_reference<TInterface>::type>::value,
+typename std::remove_reference<TInterface>::type>::type Container::get(InjectionContext* context)
+{
+    return get<typename std::remove_reference<TInterface>::type>(context);
+}
+
+// container.get<const IAny&>()
+template<typename TInterface>
+typename std::enable_if<std::is_reference<TInterface>::value && std::is_const<typename std::remove_reference<TInterface>::type>::value,
+typename std::remove_reference<TInterface>::type>::type Container::get(InjectionContext* context)
 {
     return get<typename std::remove_const<typename std::remove_reference<TInterface>::type>::type>(context);
 }
-
 
 inline void Container::findInstanceRetrievers(std::vector<std::shared_ptr<IInstanceRetriever>>& instanceRetrievers, const component_type& type) const
 {
