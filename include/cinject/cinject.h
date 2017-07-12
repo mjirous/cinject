@@ -1,3 +1,5 @@
+#pragma once
+
 #include <typeinfo>
 #include <vector>
 #include <functional>
@@ -115,7 +117,7 @@ static component_type make_component_type(const std::string& customName = "")
     return component_type(typeid(T), customName);
 }
 
-bool operator==(const component_type& first, const component_type& other)
+inline bool operator==(const component_type& first, const component_type& other)
 {
     return first.typeInfo == other.typeInfo;
 }
@@ -723,7 +725,7 @@ std::shared_ptr<TInterface>>::type Container::get(InjectionContext* context)
 }
 
 
-void Container::findInstanceRetrievers(std::vector<std::shared_ptr<IInstanceRetriever>>& instanceRetrievers, const component_type& type) const
+inline void Container::findInstanceRetrievers(std::vector<std::shared_ptr<IInstanceRetriever>>& instanceRetrievers, const component_type& type) const
 {
     auto iter = registrations_.find(type);
     if (iter != registrations_.end())
