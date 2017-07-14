@@ -64,7 +64,6 @@ public:
 class Arms
 {
 public:
-    INJECT(Arms()) {}
     void move() { LOG_FUNCTION_CALL(); }
 };
 
@@ -72,7 +71,6 @@ public:
 class Wings
 {
 public:
-    INJECT(Wings()) {}
     void move() { LOG_FUNCTION_CALL(); }
 };
 
@@ -147,7 +145,7 @@ class Human : public IWalker, public IRunner, public IJumper, public ICrawler, p
 {
 public:
     COMPONENT_NAME("Human being");
-    INJECT(Human(std::shared_ptr<Legs> legs, std::shared_ptr<Arms> arms, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool)) :
+    Human(std::shared_ptr<Legs> legs, std::shared_ptr<Arms> arms, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool) :
         legs(legs),
         arms(arms),
         behavior(behavior),
@@ -192,7 +190,7 @@ class Turtle : public IWalker, public ICrawler, public ISwimmer, public IWaterCo
 {
 public:
     COMPONENT_NAME("Turtle");
-    INJECT(Turtle(std::shared_ptr<Legs> legs, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool)) :
+    Turtle(std::shared_ptr<Legs> legs, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool) :
         legs(legs),
         behavior(behavior),
         waterPool(waterPool)
@@ -208,13 +206,6 @@ public:
     std::shared_ptr<Behavior> behavior;
     std::shared_ptr<WaterPool> waterPool;
 };
-
-
-
-
-
-
-
 
 
 
@@ -235,7 +226,7 @@ int main()
 
     // Manual creation of object. Not singleton, but it could be by calling InSingleTonScope
     c.bind<Behavior>().toFunction<Behavior>([](InjectionContext* ctx)
-    { 
+    {
         const std::string name = ctx->getRequester().name();
         return std::make_shared<Behavior>(name);
     });

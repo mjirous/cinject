@@ -377,6 +377,108 @@ private:
 // CONSTRUCTOR FACTORY
 /////////////////////////////////////////////////////////
 
+struct ctor_arg_resolver
+{
+    ctor_arg_resolver(InjectionContext* context)
+        : context_(context)
+    {}
+
+    template<typename TCtorArgument>
+    operator TCtorArgument()
+    {
+        return context_->getContainer().get<TCtorArgument>(context_);
+    }
+
+    InjectionContext* context_;
+};
+
+
+template<typename TInstance>
+struct ctor_arg_resolver_1st
+{
+    ctor_arg_resolver_1st(InjectionContext* context)
+        : context_(context)
+    {}
+
+    template<typename TCtorArgument, typename std::enable_if<!std::is_same<TCtorArgument, TInstance>::value && !std::is_same<TCtorArgument, TInstance&>::value, int>::type = 0>
+    operator TCtorArgument()
+    {
+        return context_->getContainer().get<TCtorArgument>(context_);
+    }
+
+    InjectionContext* context_;
+};
+
+
+template<typename T, class TEnable = void>
+class ConstructorFactory
+{
+    static_assert(always_false<T>::value, "Could not deduce any ConstructorFactory");
+};
+
+
+// Factory for trivial constructors with no arguments
+template<typename TInstance>
+class ConstructorFactory<TInstance, typename std::enable_if<!has_constructor_injection<TInstance>::value && std::is_constructible<TInstance>::value>::type>
+{
+public:
+    std::shared_ptr<TInstance> createInstance(InjectionContext* context)
+    {
+        return std::make_shared<TInstance>();
+    }
+};
+
+// Factory for automatic injection for one to ten arguments
+template<typename TInstance>
+class ConstructorFactory<TInstance, typename std::enable_if<!has_constructor_injection<TInstance>::value && !std::is_constructible<TInstance>::value>::type>
+{
+public:
+    std::shared_ptr<TInstance> createInstance(InjectionContext* context)
+    {
+        return try_instantiate(
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver(context),
+            ctor_arg_resolver_1st<TInstance>(context));
+    }
+
+private:
+    template<typename TArg, typename TNextArg, typename ... TRestArgs>
+    typename std::enable_if<std::is_constructible<TInstance, TArg, TNextArg, TRestArgs ...>::value, std::shared_ptr<TInstance>>::type
+        try_instantiate(TArg a1, TNextArg a2, TRestArgs ... args)
+    {
+        return std::make_shared<TInstance>(a1, a2, args...);
+    }
+
+    template<typename TArg, typename TNextArg, typename ... TRestArgs>
+    typename std::enable_if<!std::is_constructible<TInstance, TArg, TNextArg, TRestArgs ...>::value, std::shared_ptr<TInstance>>::type
+        try_instantiate(TArg a1, TNextArg a2, TRestArgs ... args)
+    {
+        return try_instantiate(a2, args...);
+    }
+
+    template<typename TArg>
+    typename std::enable_if<std::is_constructible<TInstance, TArg>::value, std::shared_ptr<TInstance>>::type
+        try_instantiate(TArg arg)
+    {
+        return std::make_shared<TInstance>(arg);
+    }
+
+    template<typename TArg>
+    typename std::enable_if<!std::is_constructible<TInstance, TArg>::value, std::shared_ptr<TInstance>>::type
+        try_instantiate(TArg arg)
+    {
+        static_assert(always_false<TInstance>::value, "Could not find any suitable constructor for injection. Try explicitly mark the constructor using INJECT macro");
+    }
+};
+
+
 template<typename TInstance>
 struct ConstructorInvoker;
 
@@ -392,15 +494,11 @@ struct ConstructorInvoker<TInstance(TConstructorArgs...)>
 };
 
 
-template<typename TInstance, class TEnable = void>
-struct ConstructorFactory
-{
-    static_assert(always_false<TInstance>::value, "Missing INJECT macro on implementation type!");
-};
-
+// Factory for injection using the INJECT macro
 template<typename TInstance>
-struct ConstructorFactory<TInstance, typename std::enable_if<has_constructor_injection<TInstance>::value>::type>
+class ConstructorFactory<TInstance, typename std::enable_if<has_constructor_injection<TInstance>::value>::type>
 {
+public:
     std::shared_ptr<TInstance> createInstance(InjectionContext* context)
     {
         return ConstructorInvoker<typename TInstance::ConstructorTypedef::Type>::invoke(context);

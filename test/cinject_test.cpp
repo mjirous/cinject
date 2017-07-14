@@ -804,3 +804,148 @@ namespace ConstReferenceContainerInConstructor
         ASSERT_NE(nullptr, dynamic_cast<Bear*>(zoo->animals[0].get()));
     }
 }
+
+namespace AutomaticConstructor
+{
+    class Bear
+    {
+    public:
+        INJECT(Bear()) {}
+
+        int size() { return 560; }
+    };
+
+    class ZooWithTwoBears
+    {
+    public:
+        ZooWithTwoBears(std::shared_ptr<Bear> bear1, std::shared_ptr<Bear> bear2) :
+            bear1(bear1),
+            bear2(bear2)
+        {}
+
+        std::shared_ptr<Bear> bear1;
+        std::shared_ptr<Bear> bear2;
+    };
+
+    TEST(CInjectTest, TestAutomaticConstructor_TwoArgs)
+    {
+        Container c;
+
+        c.bind<Bear>().toSelf();
+        c.bind<ZooWithTwoBears>().toSelf();
+
+        std::shared_ptr<ZooWithTwoBears> zoo = c.get<ZooWithTwoBears>();
+        ASSERT_NE(nullptr, zoo->bear1);
+        ASSERT_NE(nullptr, zoo->bear2);
+        ASSERT_EQ(560, zoo->bear1->size());
+        ASSERT_EQ(560, zoo->bear2->size());
+    }
+
+
+    class ZooWithOneBears
+    {
+    public:
+        ZooWithOneBears(std::shared_ptr<Bear> bear1) :
+            bear1(bear1)
+        {}
+
+        std::shared_ptr<Bear> bear1;
+    };
+
+    TEST(CInjectTest, TestAutomaticConstructor_OneArg)
+    {
+        Container c;
+
+        c.bind<Bear>().toSelf();
+        c.bind<ZooWithOneBears>().toSelf();
+
+        std::shared_ptr<ZooWithOneBears> zoo = c.get<ZooWithOneBears>();
+        ASSERT_NE(nullptr, zoo->bear1);
+        ASSERT_EQ(560, zoo->bear1->size());
+    }
+
+    class ZooWithTenBears
+    {
+    public:
+        ZooWithTenBears(
+            std::shared_ptr<Bear> bear1,
+            std::shared_ptr<Bear> bear2,
+            std::shared_ptr<Bear> bear3,
+            std::shared_ptr<Bear> bear4,
+            std::shared_ptr<Bear> bear5,
+            std::shared_ptr<Bear> bear6,
+            std::shared_ptr<Bear> bear7,
+            std::shared_ptr<Bear> bear8,
+            std::shared_ptr<Bear> bear9,
+            std::shared_ptr<Bear> bear10) :
+            bear1(bear1),
+            bear2(bear2),
+            bear3(bear3),
+            bear4(bear4),
+            bear5(bear5),
+            bear6(bear6),
+            bear7(bear7),
+            bear8(bear8),
+            bear9(bear9),
+            bear10(bear10)
+        {}
+
+        std::shared_ptr<Bear> bear1;
+        std::shared_ptr<Bear> bear2;
+        std::shared_ptr<Bear> bear3;
+        std::shared_ptr<Bear> bear4;
+        std::shared_ptr<Bear> bear5;
+        std::shared_ptr<Bear> bear6;
+        std::shared_ptr<Bear> bear7;
+        std::shared_ptr<Bear> bear8;
+        std::shared_ptr<Bear> bear9;
+        std::shared_ptr<Bear> bear10;
+    };
+
+    TEST(CInjectTest, TestAutomaticConstructor_TenArgs)
+    {
+        Container c;
+
+        c.bind<Bear>().toSelf();
+        c.bind<ZooWithTenBears>().toSelf();
+
+        std::shared_ptr<ZooWithTenBears> zoo = c.get<ZooWithTenBears>();
+        ASSERT_NE(nullptr, zoo->bear1);
+        ASSERT_NE(nullptr, zoo->bear2);
+        ASSERT_NE(nullptr, zoo->bear3);
+        ASSERT_NE(nullptr, zoo->bear4);
+        ASSERT_NE(nullptr, zoo->bear5);
+        ASSERT_NE(nullptr, zoo->bear6);
+        ASSERT_NE(nullptr, zoo->bear7);
+        ASSERT_NE(nullptr, zoo->bear8);
+        ASSERT_NE(nullptr, zoo->bear9);
+        ASSERT_NE(nullptr, zoo->bear10);
+        ASSERT_EQ(560, zoo->bear1->size());
+        ASSERT_EQ(560, zoo->bear2->size());
+        ASSERT_EQ(560, zoo->bear3->size());
+        ASSERT_EQ(560, zoo->bear4->size());
+        ASSERT_EQ(560, zoo->bear5->size());
+        ASSERT_EQ(560, zoo->bear6->size());
+        ASSERT_EQ(560, zoo->bear7->size());
+        ASSERT_EQ(560, zoo->bear8->size());
+        ASSERT_EQ(560, zoo->bear9->size());
+        ASSERT_EQ(560, zoo->bear10->size());
+    }
+
+
+    class ZooWithNoBear
+    {
+    public:
+        ZooWithNoBear() {}
+    };
+
+    TEST(CInjectTest, TestAutomaticConstructor_NoArg)
+    {
+        Container c;
+
+        c.bind<ZooWithNoBear>().toSelf();
+
+        std::shared_ptr<ZooWithNoBear> zoo = c.get<ZooWithNoBear>();
+        ASSERT_NE(nullptr, zoo);
+    }
+}
