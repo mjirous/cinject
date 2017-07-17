@@ -383,7 +383,7 @@ struct ctor_arg_resolver
         : context_(context)
     {}
 
-    template<typename TCtorArgument>
+    template<typename TCtorArgument, typename std::enable_if<!std::is_pointer<TCtorArgument>::value, int>::type = 0>
     operator TCtorArgument()
     {
         return context_->getContainer().get<TCtorArgument>(context_);
@@ -400,7 +400,7 @@ struct ctor_arg_resolver_1st
         : context_(context)
     {}
 
-    template<typename TCtorArgument, typename std::enable_if<!std::is_same<TCtorArgument, TInstance>::value && !std::is_same<TCtorArgument, TInstance&>::value, int>::type = 0>
+    template<typename TCtorArgument, typename std::enable_if<!std::is_same<TCtorArgument, TInstance>::value && !std::is_same<TCtorArgument, TInstance&>::value && !std::is_pointer<TCtorArgument>::value, int>::type = 0>
     operator TCtorArgument()
     {
         return context_->getContainer().get<TCtorArgument>(context_);
