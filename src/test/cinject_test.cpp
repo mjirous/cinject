@@ -1,3 +1,6 @@
+#ifdef __STRICT_ANSI__
+#undef __STRICT_ANSI__
+#endif
 #include <gtest/gtest.h>
 #include "cinject/cinject.h"
 
@@ -571,7 +574,7 @@ namespace CircularDependency
         Container c;
 
         // intentional order to not match the function implementation order
-        c.bind<Start>().toFunction<Start>([](InjectionContext* c) { return std::make_shared<Start>(c->getContainer().get<Middle>(c)); });
+        c.bind<Start>().toFunction<Start>([](InjectionContext* ctx) { return std::make_shared<Start>(ctx->getContainer().get<Middle>(ctx)); });
         c.bind<Middle>().toSelf();
         c.bind<End>().toSelf();
 
@@ -960,8 +963,8 @@ namespace PointerConstructorResolution
         explicit SomeClass(AnotherClass *anotherClass) : mAnotherClass(anotherClass) {}
         explicit SomeClass(std::shared_ptr<Dependency> dependency) : mDependency(dependency), dependencyInjected(true) {}
         
-        bool dependencyInjected = false;
         std::shared_ptr<Dependency> mDependency;
+        bool dependencyInjected = false;
         AnotherClass *mAnotherClass = nullptr;        
     };
     

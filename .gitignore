@@ -39,3 +39,13 @@
 .build
 .install
 build/
+
+# Clion files
+.idea
+
+# Build files
+/cmake-build-*
+.doxygen
+
+# 3rd party
+/.3rdparty
