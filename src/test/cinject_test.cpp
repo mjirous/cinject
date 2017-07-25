@@ -8,7 +8,7 @@
 using cinject::Container;
 using cinject::InjectionContext;
 using cinject::ComponentNotFoundException;
-using cinject::CircularDependencyFound;
+using cinject::CircularDependencyFoundException;
 
 
 namespace SimpleResolve
@@ -566,7 +566,7 @@ namespace CircularDependency
         c.bind<Middle>().toSelf();
         c.bind<End>().toSelf();
 
-        ASSERT_THROW(c.get<Start>(), CircularDependencyFound);
+        ASSERT_THROW(c.get<Start>(), CircularDependencyFoundException);
     }
 
     TEST(CInjectTest, TestCircularDependency_UsingToFunction)
@@ -578,7 +578,7 @@ namespace CircularDependency
         c.bind<Middle>().toSelf();
         c.bind<End>().toSelf();
 
-        ASSERT_THROW(c.get<Start>(), CircularDependencyFound);
+        ASSERT_THROW(c.get<Start>(), CircularDependencyFoundException);
     }
 }
 

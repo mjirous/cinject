@@ -6,6 +6,10 @@
 #include <memory>
 #include <unordered_map>
 
+
+#define CINJECT_VERSION 1000000 // 1.000.000
+
+
 namespace cinject
 {
 
@@ -151,10 +155,10 @@ struct type_name<T, typename std::enable_if<has_name<T>::value>::type>
 /////////////////////////////////////////////////////////
 // EXCEPTIONS
 /////////////////////////////////////////////////////////
-class CircularDependencyFound : public std::logic_error
+class CircularDependencyFoundException : public std::logic_error
 {
 public:
-    explicit CircularDependencyFound(const component_type& type)
+    explicit CircularDependencyFoundException(const component_type& type)
         : std::logic_error(std::string("Found circular dependency on object '") + type.name() + "'")
     {
     }
@@ -266,7 +270,7 @@ public:
         {
             if (stack[i] == stack.back())
             {
-                throw CircularDependencyFound(stack.back());
+                throw CircularDependencyFoundException(stack.back());
             }
         }
     }
