@@ -22,7 +22,7 @@ namespace SimpleResolve
     class Cheetah : public IRunner
     {
     public:
-        INJECT(Cheetah()) {}
+        CINJECT(Cheetah()) {}
     };
 
     TEST(CInjectTest, TestSimpleResolve)
@@ -163,7 +163,7 @@ namespace MultipleInterfaces
     class Cheetah : public IJumper, public IRunner, public IWalker
     {
     public:
-        INJECT(Cheetah()) {}
+        CINJECT(Cheetah()) {}
         int WalkSpeed() override { return 10; }
         int RunSpeed() override { return 120; }
         int JumpHeight() override { return 2; }
@@ -226,13 +226,13 @@ namespace NestedDependencies
     class SpiderNest : public INest
     {
     public:
-        INJECT(SpiderNest()) {}
+        CINJECT(SpiderNest()) {}
     };
 
     class Spider
     {
     public:
-        INJECT(Spider(std::shared_ptr<INest> nest)) :
+        CINJECT(Spider(std::shared_ptr<INest> nest)) :
             nest(nest)
         {}
 
@@ -273,25 +273,25 @@ namespace NestedDependenciesWithVector
     class GrassSnake : public ISnake
     {
     public:
-        INJECT(GrassSnake()) {}
+        CINJECT(GrassSnake()) {}
     };
 
     class Python : public ISnake
     {
     public:
-        INJECT(Python()) {}
+        CINJECT(Python()) {}
     };
 
     class Mamba : public ISnake
     {
     public:
-        INJECT(Mamba()) {}
+        CINJECT(Mamba()) {}
     };
 
     class Viper : public ISnake
     {
     public:
-        INJECT(Viper()) {}
+        CINJECT(Viper()) {}
     };
 
 
@@ -305,7 +305,7 @@ namespace NestedDependenciesWithVector
     class Paper : public IMaterial
     {
     public:
-        INJECT(Paper()) {}
+        CINJECT(Paper()) {}
     };
 
 
@@ -318,7 +318,7 @@ namespace NestedDependenciesWithVector
     class SnakeEncyclopedy : public IEncyclopedy
     {
     public:
-        INJECT(SnakeEncyclopedy(std::shared_ptr<IMaterial> material, std::vector<std::shared_ptr<ISnake>> snakes)) :
+        CINJECT(SnakeEncyclopedy(std::shared_ptr<IMaterial> material, std::vector<std::shared_ptr<ISnake>> snakes)) :
             material(material),
             snakes(snakes)
         {}
@@ -372,7 +372,7 @@ namespace ComponentNotFound
     class Human : public IRunner
     {
     public:
-        INJECT(Human(std::shared_ptr<IWaterPool> waterPool)) {}
+        CINJECT(Human(std::shared_ptr<IWaterPool> waterPool)) {}
     };
 
     TEST(CInjectTest, TestComponentNotFound)
@@ -403,25 +403,25 @@ namespace ResolveCollection
     class GrassSnake : public ISnake
     {
     public:
-        INJECT(GrassSnake()) {}
+        CINJECT(GrassSnake()) {}
     };
 
     class Python : public ISnake
     {
     public:
-        INJECT(Python()) {}
+        CINJECT(Python()) {}
     };
 
     class Mamba : public ISnake
     {
     public:
-        INJECT(Mamba()) {}
+        CINJECT(Mamba()) {}
     };
 
     class Viper : public ISnake
     {
     public:
-        INJECT(Viper()) {}
+        CINJECT(Viper()) {}
     };
 
     TEST(CInjectTest, TestResolveCollection)
@@ -506,7 +506,7 @@ namespace BindManyToOne
     class Human : public IWalker, public IRunner, public IJumper
     {
     public:
-        INJECT(Human()) {}
+        CINJECT(Human()) {}
 
         virtual int walk() { return 1; }
         virtual int run() { return 2; }
@@ -542,19 +542,19 @@ namespace CircularDependency
     class Start
     {
     public:
-        INJECT(Start(std::shared_ptr<Middle> middle)) {}
+        CINJECT(Start(std::shared_ptr<Middle> middle)) {}
     };
 
     class Middle
     {
     public:
-        INJECT(Middle(std::shared_ptr<End> end)) {}
+        CINJECT(Middle(std::shared_ptr<End> end)) {}
     };
 
     class End
     {
     public:
-        INJECT(End(std::shared_ptr<Start> start)) {}
+        CINJECT(End(std::shared_ptr<Start> start)) {}
     };
 
     TEST(CInjectTest, TestCircularDependency)
@@ -606,8 +606,8 @@ namespace InjectionContextStack
     class GrassSnake : public ISnake
     {
     public:
-        COMPONENT_NAME("GrassSnake");
-        INJECT(GrassSnake(std::shared_ptr<Home> home)) : home(home) {}
+        CINJECT_NAME("GrassSnake");
+        CINJECT(GrassSnake(std::shared_ptr<Home> home)) : home(home) {}
 
         virtual std::string getHomeName() override { return home->name; }
 
@@ -617,8 +617,8 @@ namespace InjectionContextStack
     class Python : public ISnake
     {
     public:
-        COMPONENT_NAME("Python");
-        INJECT(Python(std::shared_ptr<Home> home)) : home(home) {}
+        CINJECT_NAME("Python");
+        CINJECT(Python(std::shared_ptr<Home> home)) : home(home) {}
 
         virtual std::string getHomeName() override { return home->name; }
 
@@ -628,8 +628,8 @@ namespace InjectionContextStack
     class Mamba : public ISnake
     {
     public:
-        COMPONENT_NAME("Mamba");
-        INJECT(Mamba(std::shared_ptr<Home> home)) : home(home) {}
+        CINJECT_NAME("Mamba");
+        CINJECT(Mamba(std::shared_ptr<Home> home)) : home(home) {}
 
         virtual std::string getHomeName() override { return home->name; }
 
@@ -639,8 +639,8 @@ namespace InjectionContextStack
     class Viper : public ISnake
     {
     public:
-        COMPONENT_NAME("Viper");
-        INJECT(Viper(std::shared_ptr<Home> home)) : home(home) {}
+        CINJECT_NAME("Viper");
+        CINJECT(Viper(std::shared_ptr<Home> home)) : home(home) {}
 
         virtual std::string getHomeName() override { return home->name; }
 
@@ -681,13 +681,13 @@ namespace ContainerHierarchy
     class City
     {
     public:
-        INJECT(City()) {}
+        CINJECT(City()) {}
     };
 
     class Building
     {
     public:
-        INJECT(Building()) {}
+        CINJECT(Building()) {}
     };
 
     TEST(CInjectTest, TestInjectionContextStack_Name)
@@ -721,25 +721,25 @@ namespace ContainerHierarchyWithCollection
     class Snake : public IAnimal
     {
     public:
-        INJECT(Snake()) {}
+        CINJECT(Snake()) {}
     };
 
     class Cheetah : public IAnimal
     {
     public:
-        INJECT(Cheetah()) {}
+        CINJECT(Cheetah()) {}
     };
 
     class Bird : public IAnimal
     {
     public:
-        INJECT(Bird()) {}
+        CINJECT(Bird()) {}
     };
 
     class Fish : public IAnimal
     {
     public:
-        INJECT(Fish()) {}
+        CINJECT(Fish()) {}
     };
 
     TEST(CInjectTest, TestInjectionContextStack_Name)
@@ -775,20 +775,20 @@ namespace ConstReferenceContainerInConstructor
     class Bear : public IAnimal
     {
     public:
-        INJECT(Bear()) {}
+        CINJECT(Bear()) {}
     };
 
     class Snake : public IAnimal
     {
     public:
-        INJECT(Snake()) {}
+        CINJECT(Snake()) {}
     };
 
 
     class Zoo
     {
     public:
-        INJECT(Zoo(const std::vector<std::shared_ptr<IAnimal>>& animals))
+        CINJECT(Zoo(const std::vector<std::shared_ptr<IAnimal>>& animals))
             : animals(animals) {}
 
         std::vector<std::shared_ptr<IAnimal>> animals;
@@ -813,7 +813,7 @@ namespace AutomaticConstructor
     class Bear
     {
     public:
-        INJECT(Bear()) {}
+        CINJECT(Bear()) {}
 
         int size() { return 560; }
     };

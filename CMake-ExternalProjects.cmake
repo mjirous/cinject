@@ -1,5 +1,7 @@
 include(ExternalProject)
 
+add_custom_target(_BEFORE_ALL)
+
 if (BUILD_TESTS)
     find_package (Threads REQUIRED)
 
@@ -28,10 +30,7 @@ if (BUILD_TESTS)
     endif()
 
     include_directories(${GTEST_INCLUDE_DIRS})
+	add_dependencies(_BEFORE_ALL GoogleTest)
 else()
     message("BUILD_TESTS is OFF")
 endif()
-
-
-add_custom_target(_BEFORE_ALL)
-add_dependencies(_BEFORE_ALL GoogleTest)

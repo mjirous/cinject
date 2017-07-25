@@ -46,6 +46,11 @@ build/
 # Build files
 /cmake-build-*
 .doxygen
+.build
 
 # 3rd party
 /.3rdparty
+
+# Visual Studio
+.vs
+CMakeSettings.json

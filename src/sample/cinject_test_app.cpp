@@ -57,7 +57,7 @@ public:
 class Legs
 {
 public:
-    INJECT(Legs()) {}
+    CINJECT(Legs()) {}
     void move() { LOG_FUNCTION_CALL(); }
 };
 
@@ -119,8 +119,8 @@ public:
 class Bird : public IWalker, public IRunner, public IJumper, public IFlyer, public IWaterConsumer
 {
 public:
-    COMPONENT_NAME("Snake");
-    INJECT(Bird(std::shared_ptr<Legs> legs, std::shared_ptr<Wings> wings, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool)) :
+    CINJECT_NAME("Snake");
+    CINJECT(Bird(std::shared_ptr<Legs> legs, std::shared_ptr<Wings> wings, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool)) :
         legs(legs),
         wings(wings),
         behavior(behavior),
@@ -144,7 +144,7 @@ public:
 class Human : public IWalker, public IRunner, public IJumper, public ICrawler, public ISwimmer, public IWaterConsumer
 {
 public:
-    COMPONENT_NAME("Human being");
+    CINJECT_NAME("Human being");
     Human(std::shared_ptr<Legs> legs, std::shared_ptr<Arms> arms, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool) :
         legs(legs),
         arms(arms),
@@ -169,8 +169,8 @@ public:
 class Snake : public ICrawler, public IWaterConsumer
 {
 public:
-    COMPONENT_NAME("Snake");
-    INJECT(Snake(std::shared_ptr<Legs> legs, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool)) :
+    CINJECT_NAME("Snake");
+    CINJECT(Snake(std::shared_ptr<Legs> legs, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool)) :
         legs(legs),
         behavior(behavior),
         waterPool(waterPool)
@@ -189,7 +189,7 @@ public:
 class Turtle : public IWalker, public ICrawler, public ISwimmer, public IWaterConsumer
 {
 public:
-    COMPONENT_NAME("Turtle");
+    CINJECT_NAME("Turtle");
     Turtle(std::shared_ptr<Legs> legs, std::shared_ptr<Behavior> behavior, std::shared_ptr<WaterPool> waterPool) :
         legs(legs),
         behavior(behavior),

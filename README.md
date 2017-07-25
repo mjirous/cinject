@@ -12,10 +12,10 @@ Cinject is a very simple C++ dependency injection framework built with features 
 
 ```
 .
-+-- include/cinject - Cinject implementation, to be included in your project.
++-- include/cinject    - Cinject implementation, to be included in your project.
 +-- src 
-    +-- sample - Contains complex example of Cinject usage demonstrating its features.
-    +-- test - Unit tests of Cinject (requires [google test]( https://github.com/google/googletest ))
+    +-- sample         - Contains complex example of Cinject usage demonstrating its features.
+    +-- test           - Unit tests of Cinject (requires [google test]( https://github.com/google/googletest ))
  
 ```
 
@@ -66,7 +66,7 @@ container.bind<IFoo>().to<Foo>();
 
 ```
 
-The `bind` function is used to collect all interfaces or classes used as keys in the container. The `to` function is used register type that should be instantiated when anyone asks for the interface. Notice the `INJECT` macro that wraps the constructor of `Foo` class. A class that is supposed to be instantiated by Cinject must contain exactly one constructor wrapped in that macro.
+The `bind` function is used to collect all interfaces or classes used as keys in the container. The `to` function is used register type that should be instantiated when anyone asks for the interface. Notice the `CINJECT` macro that wraps the constructor of `Foo` class. A class that is supposed to be instantiated by Cinject must contain exactly one constructor wrapped in that macro.
 
 Once the container registration is finished then call the `get` function to let the framework instantiate the desired type automatically.
 

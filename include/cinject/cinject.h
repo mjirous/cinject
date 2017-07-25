@@ -19,11 +19,11 @@ struct ConstructorType
     typedef T Type;
 };
 
-#define INJECT(constructorFunction) \
+#define CINJECT(constructorFunction) \
 typedef cinject::ConstructorType<constructorFunction> ConstructorTypedef; \
 constructorFunction
 
-#define COMPONENT_NAME(component_name) \
+#define CINJECT_NAME(component_name) \
 static const char* name() { return component_name; }
 
 /////////////////////////////////////////////////////////
@@ -569,7 +569,7 @@ private:
     typename std::enable_if<!std::is_constructible<TInstance, TArg>::value, std::shared_ptr<TInstance>>::type
         try_instantiate(TArg arg)
     {
-        static_assert(always_false<TInstance>::value, "Could not find any suitable constructor for injection. Try explicitly mark the constructor using INJECT macro");
+        static_assert(always_false<TInstance>::value, "Could not find any suitable constructor for injection. Try explicitly mark the constructor using CINJECT macro");
     }
 };
 
@@ -589,7 +589,7 @@ struct ConstructorInvoker<TInstance(TConstructorArgs...)>
 };
 
 
-// Factory for injection using the INJECT macro
+// Factory for injection using the CINJECT macro
 template<typename TInstance>
 class ConstructorFactory<TInstance, typename std::enable_if<has_constructor_injection<TInstance>::value>::type>
 {
