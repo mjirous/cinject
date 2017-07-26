@@ -6,6 +6,11 @@ if (BUILD_TESTS)
     find_package (Threads REQUIRED)
 
     if (NOT GTEST_ROOT)
+    
+        if (MSVC)
+            set(FORCE_SHARED_CRT "-Dgtest_force_shared_crt=ON")
+        endif()
+    
         ExternalProject_Add(
                 GoogleTest
 
@@ -16,7 +21,7 @@ if (BUILD_TESTS)
                 PATCH_COMMAND ""
 
                 SOURCE_DIR "${CMAKE_SOURCE_DIR}/.3rdparty/gtest"
-                CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GTEST=ON -DBUILD_GMOCK=ON -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/gtest
+                CMAKE_ARGS -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE} -DBUILD_GTEST=ON -DBUILD_GMOCK=ON -DCMAKE_INSTALL_PREFIX=${CMAKE_BINARY_DIR}/gtest ${FORCE_SHARED_CRT}
 
                 TEST_COMMAND ""
         )
