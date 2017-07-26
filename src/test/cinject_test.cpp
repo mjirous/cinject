@@ -980,3 +980,44 @@ namespace PointerConstructorResolution
         ASSERT_FALSE(someClass->mAnotherClass);
     }
 }
+
+namespace ComponentAlias
+{
+    class Pet
+    {
+    public:
+        Pet(const std::string& name) : name_(name) {}
+
+        std::string name_;
+    };
+
+    class HouseOne
+    {
+    public:
+        HouseOne(std::shared_ptr<Pet> pet) : pet_(std::move(pet)) {}
+
+        std::shared_ptr<Pet> pet_;
+    };
+
+    class HouseTwo
+    {
+    public:
+        HouseTwo(std::shared_ptr<Pet> pet) : pet_(std::move(pet)) {}
+
+        std::shared_ptr<Pet> pet_;
+    };
+
+    TEST(CInjectTest, TestPointerConstructorResolution)
+    {
+        Container c;
+        c.bind<Pet>().toFunction<Pet>([](InjectionContext* ctx) { return std::make_shared<Pet>(ctx->getRequester().name() + " pet"); });
+        c.bind<HouseOne>().toSelf().alias("Snake's").inSingletonScope();
+        c.bind<HouseTwo>().toSelf().alias("Lion's").inSingletonScope();
+
+        std::shared_ptr<HouseOne> houseOne = c.get<HouseOne>();
+        std::shared_ptr<HouseTwo> houseTwo = c.get<HouseTwo>();
+
+        ASSERT_EQ("Snake's pet", houseOne->pet_->name_);
+        ASSERT_EQ("Lion's pet", houseTwo->pet_->name_);
+    }
+}

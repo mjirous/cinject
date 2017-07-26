@@ -659,30 +659,33 @@ class InstanceStorage
 {
 public:
     explicit InstanceStorage(TFactory factory) :
-        factory_(factory),
-        mIsSingleton(false) {}
+        factory_(factory)
+    {}
 
     virtual std::shared_ptr<TImplementation> getInstance(InjectionContext* context)
     {
-        if (!mIsSingleton)
+        if (!isSingleton_)
         {
             return createInstance(context);
         }
 
-        if (mInstance == nullptr)
+        if (instance_ == nullptr)
         {
-            mInstance = createInstance(context);
+            instance_ = createInstance(context);
         }
 
-        return mInstance;
+        return instance_;
     }
 
-    void setSingleton(bool value) { mIsSingleton = value; }
+    void setSingleton(bool value) { isSingleton_ = value; }
+
+    void setName(const std::string& name) { name_ = name; }
+    void setName(std::string&& name) { name_ = name; }
 
 private:
     std::shared_ptr<TImplementation> createInstance(InjectionContext* context)
     {
-        ContextGuard guard(context, make_component_type<TImplementation>(type_name<TImplementation>::value()));
+        ContextGuard guard(context, make_component_type<TImplementation>(!name_.empty() ? name_ : type_name<TImplementation>::value()));
 
         guard.ensureNoCycle();
 
@@ -690,8 +693,9 @@ private:
     }
 
     TFactory factory_;
-    bool mIsSingleton;
-    std::shared_ptr<TImplementation> mInstance;
+    bool isSingleton_ = false;
+    std::shared_ptr<TImplementation> instance_;
+    std::string name_;
 };
 
 
@@ -718,9 +722,31 @@ public:
     /// Configures the instance to be handled as singleton
     ///
     ///
-    void inSingletonScope()
+    StorageConfiguration& inSingletonScope()
     {
         storage_->setSingleton(true);
+
+        return *this;
+    }
+
+    /// Configures the instance name
+    ///
+    ///
+    StorageConfiguration& alias(const std::string& name)
+    {
+        storage_->setName(name);
+
+        return *this;
+    }
+
+    /// Configures the instance name
+    ///
+    ///
+    StorageConfiguration& alias(std::string&& name)
+    {
+        storage_->setName(name);
+
+        return *this;
     }
 
 private:
