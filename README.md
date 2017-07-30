@@ -233,7 +233,7 @@ class:
 class Application
 {
 public:
-    Application(const std::vector<std::shared_ptr<IApplicationService>> services) : services_(services) {}
+    Application(std::vector<std::shared_ptr<IApplicationService>> services) : services_(std::move(services)) {}
     
     void start()
     {
@@ -247,6 +247,8 @@ private:
     std::vector<std::shared_ptr<IApplicationService>> services_;
 };
 ```
+
+*Always pass the vector as value and then use `std::move` to move it to your member field. It prevents copying of the vector.*
 
 And add the Application to our registration list:
 
