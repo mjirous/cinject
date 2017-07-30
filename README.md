@@ -15,10 +15,11 @@ Cinject is a very simple C++ dependency injection framework built with features 
 +-- include/cinject    - Cinject implementation, to be included in your project.
 +-- src 
     +-- sample         - Contains complex example of Cinject usage demonstrating its features.
-    +-- test           - Unit tests of Cinject (requires [google test]( https://github.com/google/googletest ))
+    +-- test           - Unit tests of Cinject (requires google test)
  
 ```
 
+Google test can be found [here]( https://github.com/google/googletest ).
 
 ### Features ###
 
